@@ -47,28 +47,27 @@ def create_ticket(request):
 
     return render(request, 'LITRevu/create_ticket.html', {'form': form})
 
+######CRITIQUE VIEW #######
 @login_required(login_url='/home/')
 def create_critique(request):
     if request.method == 'POST':
         critique_form = CritiqueForm(request.POST, request.FILES)
         feedback_form = CritiqueFeedbackForm(request.POST)
 
-        # Log the form validation status
         print("Critique Form Valid: ", critique_form.is_valid())
         print("Feedback Form Valid: ", feedback_form.is_valid())
 
         if critique_form.is_valid() and feedback_form.is_valid():
-            # Save the critique first
+
             critique = critique_form.save(commit=False)
             critique.user = request.user
             critique.save()
 
-            # Create the feedback manually since it's a regular form, not a ModelForm
             feedback = CritiqueFeedback(
                 critique=critique,  # Link feedback to the critique
-                rating=feedback_form.cleaned_data['rating'],  # Get cleaned data from form
-                comment=feedback_form.cleaned_data['comment'],  # Get cleaned data from form
-                user=request.user  # Assign the user who gave feedback
+                rating=feedback_form.cleaned_data['rating'],
+                comment=feedback_form.cleaned_data['comment'],
+                user=request.user  # user who gave feedback
             )
             feedback.save()
 
@@ -76,7 +75,7 @@ def create_critique(request):
             return redirect('flux')
 
         else:
-            # Log errors if forms are not valid
+
             print("Critique Form Errors: ", critique_form.errors)
             print("Feedback Form Errors: ", feedback_form.errors)
 
@@ -89,9 +88,6 @@ def create_critique(request):
         'LITRevu/create_critique.html',
         {'critique_form': critique_form, 'feedback_form': feedback_form}
     )
-
-
-
 
 
 def login_view(request):

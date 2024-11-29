@@ -19,8 +19,11 @@ urlpatterns = [
     path('follow/<int:user_id>/', views.follow_user, name='follow_user'),
     path('unfollow/<int:user_id>/', views.unfollow_user, name='unfollow_user'),
     path('create-critique/', views.create_critique, name='create_critique'),
-
+# see static for urls Django
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# condition ou la valeur debug dans setting is True
+
