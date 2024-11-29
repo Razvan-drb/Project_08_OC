@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer une critique</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/create_critique.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="header-title">LITReview</div>
+        <nav class="header-nav">
+            <a href="{% url 'flux' %}">Flux</a>
+            <a href="{% url 'create_ticket' %}">Posts</a>
+            <a href="{% url 'manage_followers' %}">Abonnements</a>
+            <a href="{% url 'logout' %}">Se déconnecter</a>
+        </nav>
+    </header>
+
+    <main>
+    <h1>Créer une critique</h1>
+
+    <!-- First Form -->
+    <form method="post" enctype="multipart/form-data" class="critique-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="title">Livre / Article</label>
+            <input type="text" id="title" name="title" placeholder="Titre">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="6" placeholder="Description"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" id="image" name="image">
+        </div>
+
+        <button type="submit">Télécharger fichier</button>
+    </form>
+
+    <!-- Second Form -->
+    <form method="post" class="critique-feedback-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="rating">Note</label>
+            <div id="rating">
+                {% for i in "012345" %}
+                <label>
+                    <input type="radio" name="rating" value="{{ i }}"> {{ i }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="comment">Commentaire</label>
+            <textarea id="comment" name="comment" rows="6" placeholder="Votre commentaire"></textarea>
+        </div>
+
+        <button type="submit">Envoyer</button>
+    </form>
+</main>
+
+</div>
+
+</body>
+</html>

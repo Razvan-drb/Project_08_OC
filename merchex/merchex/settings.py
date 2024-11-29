@@ -117,8 +117,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [BASE_DIR / "LITRevu" / "static"]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = '/home/'
+LOGIN_REDIRECT_URL = '/flux/'
+LOGOUT_REDIRECT_URL = '/home/'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+# Path for uploaded images
+MEDIA_ROOT = '/home/razvandaraban/Projets/Project_08_OC/merchex/LITRevu/static/data/uploaded_books_img'
+MEDIA_URL = '/media/'

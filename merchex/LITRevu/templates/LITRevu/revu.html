@@ -1,0 +1,16 @@
+
+<html>
+    <head><title>LITRevu</title></head>
+    <body>
+        <h1>LITRevu</h1>
+        <p>revu:</p>
+        <h4>mes tickets existants dans la base de données:</h4>
+            <ul>
+
+                {% for ticket in all_tickets %}
+                    <li>{{ ticket.name|upper }}</li>
+                {% endfor %}
+            </ul>
+
+    </body>
+</html>

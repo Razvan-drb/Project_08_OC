@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flux</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/flux.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">Flux</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">LITReview</a></li>
+                <li><a href="{% url 'flux' %}">Flux</a></li>
+                <li><a href="{% url 'create_ticket' %}">Posts</a></li>
+                <li><a href="{% url 'manage_followers' %}">Abonnements</a></li>
+                <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="buttons">
+            <form method="get" action="{% url 'create_ticket' %}">
+                <button type="submit" class="custom_button">Demander une critique</button>
+            </form>
+            <a href="{% url 'create_critique' %}" class="custom_button">Créer une critique</a>
+        </div>
+
+
+        {% for ticket in tickets %}
+        <div class="review-box">
+            <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
+            <h2>{{ ticket.book_title }} - <small>{{ ticket.author }}</small></h2>
+            <p><strong>Par:</strong> {{ ticket.name }}</p>
+            <p>{{ ticket.review_content }}</p>
+
+            <div class="ticket">
+                <p><strong>Détails du Ticket</strong></p><br>
+                <p><strong>Titre:</strong> {{ ticket.book_title }}</p><br>
+                <p><strong>Auteur:</strong> {{ ticket.author }}</p><br>
+                <div class="book-cover">
+                    <img src="{% static 'data/Dream-Quest_of_Vellitt_Boe_by_kij_johnson.png' %}" alt="Book cover placeholder">
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucune critique n'a été publiée pour le moment.</p>
+        {% endfor %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Page d'accueil</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/home.css' %}">
+</head>
+<body>
+    <header>
+        <h1>LITReview</h1>
+    </header>
+
+    <!-- Display messages (success/error) -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="container">
+        <div class="box">
+            <h2>Inscrivez-vous maintenant</h2>
+            <!-- Link the button to the inscription page -->
+            <a href="{% url 'inscription' %}">
+                <button>S'inscrire</button>
+            </a>
+        </div>
+        <div class="box">
+            <h2>Connectez-vous</h2>
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.GET.next|default:'home' }}">
+                <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+                <input type="password" name="password" placeholder="Mot de passe" required>
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

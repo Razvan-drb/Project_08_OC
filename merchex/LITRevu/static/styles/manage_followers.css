@@ -1,0 +1,138 @@
+<style>
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f9;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 2rem;
+        color: #198c07;
+    }
+
+    nav {
+        margin-top: 1rem;
+    }
+
+    nav a {
+        text-decoration: none;
+        color: #198c07;
+        margin: 0 1rem;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+        color: #ff5733;
+    }
+
+    main h2 {
+        margin-bottom: 1.5rem;
+        color: #444;
+    }
+
+    form {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    form input[type="text"] {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    form button {
+        padding: 0.5rem 1rem;
+        background: #198c07;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    form button:hover {
+        background: #ff5733;
+    }
+
+    section h3 {
+        margin-bottom: 1rem;
+        color: #555;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 0.5rem;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    ul li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background: #f9f9f9;
+        transition: background 0.3s ease;
+    }
+
+    ul li:hover {
+        background: #e6f7ff;
+    }
+
+    .unfollow-button {
+        text-decoration: none;
+        color: #d9534f;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .unfollow-button:hover {
+        color: #ff5733;
+    }
+    .follow-button {
+    padding: 0.5rem 1rem;
+    background: #198c07; /* Green background */
+    color: #fff;         /* White text */
+    border: none;        /* No border */
+    border-radius: 4px;  /* Rounded corners */
+    cursor: pointer;     /* Pointer cursor on hover */
+    text-decoration: none; /* Remove underline from link */
+    display: inline-block; /* Ensure it behaves like a block element */
+    transition: background 0.3s ease, transform 0.2s ease; /* Smooth background color transition */
+}
+
+    .follow-button:hover {
+        background: #147a05; /* Darker green on hover */
+        transform: scale(1.05); /* Slightly enlarge on hover */
+    }
+</style>

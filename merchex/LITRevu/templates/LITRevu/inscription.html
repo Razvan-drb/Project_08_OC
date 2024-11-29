@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire d'inscription</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/inscription.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>LITReview</h1>
+    </div>
+    <div class="form-title">Inscrivez-vous</div>
+
+    <!-- Display general messages (success/error) -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post">
+    {% csrf_token %}
+    {{ form.username.label_tag }}
+    {{ form.username}}
+
+    {{ form.email.label_tag }}
+    {{ form.email}}
+
+    {{ form.password.label_tag }}
+    {{ form.password}}
+
+    {{ form.confirm_password.label_tag }}
+    {{ form.confirm_password}}
+
+    <div class="button-container">
+        <button type="button" onclick="history.back()">Retourner</button>
+        <button type="submit">S'inscrire</button>
+    </div>
+</form>
+
+    <!-- Display form errors if any -->
+    {% if form.errors %}
+        <div class="form-errors">
+            <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
