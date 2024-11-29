@@ -23,51 +23,49 @@
     <main>
     <h1>Créer une critique</h1>
 
-    <!-- First Form -->
-    <form method="post" enctype="multipart/form-data" class="critique-form">
-        {% csrf_token %}
+                    <!-- First Form (Critique Form) -->
+                <form method="post" enctype="multipart/form-data" class="critique-form">
+            {% csrf_token %}
 
-        <div class="form-group">
-            <label for="title">Livre / Article</label>
-            <input type="text" id="title" name="title" placeholder="Titre">
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" rows="6" placeholder="Description"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="image">Image</label>
-            <input type="file" id="image" name="image">
-        </div>
-
-        <button type="submit">Télécharger fichier</button>
-    </form>
-
-    <!-- Second Form -->
-    <form method="post" class="critique-feedback-form">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label for="rating">Note</label>
-            <div id="rating">
-                {% for i in "012345" %}
-                <label>
-                    <input type="radio" name="rating" value="{{ i }}"> {{ i }}
-                </label>
-                {% endfor %}
+            <!-- Critique Form Fields -->
+            <div class="form-group">
+                <label for="title">Livre / Article</label>
+                <input type="text" id="title" name="title" placeholder="Titre" required>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="comment">Commentaire</label>
-            <textarea id="comment" name="comment" rows="6" placeholder="Votre commentaire"></textarea>
-        </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="6" placeholder="Description" required></textarea>
+            </div>
 
-        <button type="submit">Envoyer</button>
-    </form>
-</main>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+
+            <!-- Feedback Form Fields -->
+            <div class="form-group">
+                <label for="rating">Note</label>
+                <div id="rating">
+                    {% for i in "012345" %}
+                    <label>
+                        <input type="radio" name="rating" value="{{ i }}" required> {{ i }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Commentaire</label>
+                <textarea id="comment" name="comment" rows="6" placeholder="Votre commentaire" required></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit">Envoyer</button>
+        </form>
+
+
+    </main>
 
 </div>
 

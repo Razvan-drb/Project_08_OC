@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from LITRevu.models import Ticket, Follow
+from LITRevu.models import Ticket, Follow, CritiqueFeedback
 from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm
 from .models import Inscription
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -49,35 +49,48 @@ def create_ticket(request):
 
 @login_required(login_url='/home/')
 def create_critique(request):
-    critique_form = CritiqueForm()
-    feedback_form = CritiqueFeedbackForm()
-
     if request.method == 'POST':
-        if 'title' in request.POST:
-            critique_form = CritiqueForm(request.POST, request.FILES)
-            if critique_form.is_valid():
-                critique = critique_form.save(commit=False)
-                critique.user = request.user
-                critique.save()
-                print(f"Image saved at: {critique.image.url}")
+        critique_form = CritiqueForm(request.POST, request.FILES)
+        feedback_form = CritiqueFeedbackForm(request.POST)
 
-                messages.success(request, "Critique créée avec succès!")
-                return redirect('flux')
+        # Log the form validation status
+        print("Critique Form Valid: ", critique_form.is_valid())
+        print("Feedback Form Valid: ", feedback_form.is_valid())
 
-        elif 'rating' in request.POST:
-            feedback_form = CritiqueFeedbackForm(request.POST)
-            if feedback_form.is_valid():
-                feedback = feedback_form.save(commit=False)
-                feedback.user = request.user
-                feedback.save()
-                messages.success(request, "Commentaire ajouté avec succès!")
-                return redirect('flux')
+        if critique_form.is_valid() and feedback_form.is_valid():
+            # Save the critique first
+            critique = critique_form.save(commit=False)
+            critique.user = request.user
+            critique.save()
+
+            # Create the feedback manually since it's a regular form, not a ModelForm
+            feedback = CritiqueFeedback(
+                critique=critique,  # Link feedback to the critique
+                rating=feedback_form.cleaned_data['rating'],  # Get cleaned data from form
+                comment=feedback_form.cleaned_data['comment'],  # Get cleaned data from form
+                user=request.user  # Assign the user who gave feedback
+            )
+            feedback.save()
+
+            messages.success(request, "Critique et commentaire créés avec succès!")
+            return redirect('flux')
+
+        else:
+            # Log errors if forms are not valid
+            print("Critique Form Errors: ", critique_form.errors)
+            print("Feedback Form Errors: ", feedback_form.errors)
+
+    else:
+        critique_form = CritiqueForm()
+        feedback_form = CritiqueFeedbackForm()
 
     return render(
         request,
         'LITRevu/create_critique.html',
         {'critique_form': critique_form, 'feedback_form': feedback_form}
     )
+
+
 
 
 

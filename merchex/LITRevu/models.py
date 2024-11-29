@@ -36,16 +36,25 @@ class Follow(models.Model):
     def __str__(self):
         return f"{self.follower} follows {self.followed}"
 
+######### CRITIQUE PART #################
 
 class Critique(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to="") # save to MEDIA_ROOT
-    rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(6)])
-    comment = models.TextField()
+    image = models.ImageField(upload_to="")  # save to MEDIA_ROOT
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # user who created it
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.title} - {self.rating}/5"
+        return f"{self.title} - {self.user.username}"
+
+class CritiqueFeedback(models.Model):
+    critique = models.ForeignKey(Critique, on_delete=models.CASCADE, related_name='feedback')
+    rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(6)])
+    comment = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # user who gave feedback
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback on {self.critique.title} - Rating: {self.rating}/5"
 
