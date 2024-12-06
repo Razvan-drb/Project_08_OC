@@ -87,3 +87,10 @@ main h1 {
 .ticket-form button:hover {
     background-color: #0056b3; /* Darker shade on hover */
 }
+.ticket-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+}
+

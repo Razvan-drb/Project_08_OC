@@ -24,10 +24,11 @@ class InscriptionForm(forms.ModelForm):
         if password and confirm_password and password != confirm_password:
             raise forms.ValidationError("Les mots de passe ne correspondent pas.")
 
+
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['name', 'book_title', 'author', 'review_content']
+        fields = ['name', 'book_title', 'author', 'review_content', 'image']
 
 #### CRITIQUE PART ####
 

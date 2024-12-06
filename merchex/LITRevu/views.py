@@ -3,9 +3,11 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from LITRevu.models import Ticket, Follow, CritiqueFeedback
+from django.urls import reverse
+
+from LITRevu.models import Ticket, Follow, CritiqueFeedback, Critique
 from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm
 from .models import Inscription
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -30,16 +32,28 @@ def inscription(request):
 
 
 def flux(request):
-    tickets = Ticket.objects.all().order_by('-review_time')
-    return render(request, 'LITRevu/flux.html', {'tickets': tickets})
+    tickets = Ticket.objects.filter(hidden=False)
+    critiques = Critique.objects.filter(hidden=False).order_by('-created_at')
+    feedbacks = CritiqueFeedback.objects.all().order_by('-critique__created_at')
+
+    return render(
+        request,
+        'LITRevu/flux.html',
+        {'tickets': tickets,'critiques': critiques, 'feedbacks': feedbacks}
+    )
 
 
+
+# View to create a ticket
 @login_required(login_url='/home/')
 def create_ticket(request):
     if request.method == 'POST':
-        form = TicketForm(request.POST)
+        form = TicketForm(request.POST, request.FILES)  # for file uploads
         if form.is_valid():
-            form.save()
+            # Set the user field to the logged-in user before saving
+            ticket = form.save(commit=False)
+            ticket.user = request.user  # Assign the logged-in user to the ticket
+            ticket.save()
             messages.success(request, "Ticket créé avec succès!")
             return redirect('flux')
     else:
@@ -47,7 +61,19 @@ def create_ticket(request):
 
     return render(request, 'LITRevu/create_ticket.html', {'form': form})
 
-######CRITIQUE VIEW #######
+
+# View to hide a ticket
+@login_required
+def hide_ticket(request, ticket_id):
+    # Get the ticket object, only allowing the owner to hide their ticket
+    ticket = get_object_or_404(Ticket, id=ticket_id, user=request.user)
+    ticket.hidden = True  # Set the ticket to be hidden
+    ticket.save()
+    messages.success(request, "Ticket caché avec succès!")
+    return redirect('flux')
+
+
+############## CRITIQUE VIEW ################
 @login_required(login_url='/home/')
 def create_critique(request):
     if request.method == 'POST':
@@ -90,6 +116,21 @@ def create_critique(request):
     )
 
 
+@login_required(login_url='/home/')
+def hide_critique(request, critique_id):
+    if request.method == 'POST':
+        critique = get_object_or_404(Critique, id=critique_id)
+
+        if critique.user != request.user:
+            return HttpResponseForbidden("You are not allowed to hide this critique.")
+
+        critique.hidden = True
+        critique.save()
+
+        return HttpResponseRedirect(reverse('flux'))
+
+
+############### LOGIN ###########################""
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -117,7 +158,7 @@ def custom_logout_view(request):
     logout(request)
     return redirect('home')
 
-
+#################### FOLLOWERS #######################""""
 @login_required(login_url='/home/')
 def manage_followers(request):
     if request.method == 'POST':

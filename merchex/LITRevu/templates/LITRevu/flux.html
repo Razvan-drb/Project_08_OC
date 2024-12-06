@@ -29,26 +29,79 @@
             <a href="{% url 'create_critique' %}" class="custom_button">Créer une critique</a>
         </div>
 
-
-        {% for ticket in tickets %}
+        {% for critique in critiques %}
         <div class="review-box">
-            <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
-            <h2>{{ ticket.book_title }} - <small>{{ ticket.author }}</small></h2>
-            <p><strong>Par:</strong> {{ ticket.name }}</p>
-            <p>{{ ticket.review_content }}</p>
+            <p class="review-time">{{ critique.created_at|date:"H:i, d M Y" }}</p>
+            <h2>{{ critique.title }}</h2>
+            <p><strong>Description:</strong> {{ critique.description }}</p>
 
-            <div class="ticket">
-                <p><strong>Détails du Ticket</strong></p><br>
-                <p><strong>Titre:</strong> {{ ticket.book_title }}</p><br>
-                <p><strong>Auteur:</strong> {{ ticket.author }}</p><br>
-                <div class="book-cover">
-                    <img src="{% static 'data/Dream-Quest_of_Vellitt_Boe_by_kij_johnson.png' %}" alt="Book cover placeholder">
-                </div>
+            <div class="book-cover">
+                {% if critique.image %}
+                <img src="{{ critique.image.url }}" alt="Book cover">
+                {% else %}
+                <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
+                {% endif %}
+            </div>
+
+            <!-- Show the hide button only if the logged-in user is the creator -->
+            {% if critique.user == request.user %}
+            <form method="post" action="{% url 'hide_critique' critique.id %}">
+                {% csrf_token %}
+                <button type="submit" class="custom_button">Hide</button>
+            </form>
+            {% endif %}
+
+            <!-- Feedbacks related to this critique -->
+            <div class="feedback-section">
+                <h3>Feedback:</h3>
+                {% for feedback in feedbacks %}
+                    {% if feedback.critique.id == critique.id %}
+                    <p><strong>Note:</strong> {{ feedback.rating }}</p>
+                    <p><strong>Commentaire:</strong> {{ feedback.comment }}</p>
+                    <p><small>Posté par {{ feedback.user.username }}</small></p>
+                    {% endif %}
+                {% empty %}
+                <p>Aucun feedback pour cette critique.</p>
+                {% endfor %}
             </div>
         </div>
         {% empty %}
         <p>Aucune critique n'a été publiée pour le moment.</p>
         {% endfor %}
+
+        <!-- Display Tickets -->
+        <div class="ticket-section">
+            <h2>Tickets</h2>
+            {% for ticket in tickets %}
+            <div class="ticket-box">
+                <h3>{{ ticket.book_title }}</h3>
+                <p><strong>Auteur:</strong> {{ ticket.author }}</p>
+                <p>{{ ticket.review_content }}</p>
+                <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
+
+                {% if ticket.image %}
+                <div class="ticket-image">
+                    <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
+                </div>
+                {% else %}
+                <div class="ticket-image">
+                    <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
+                </div>
+                {% endif %}
+
+                <!-- Show the hide button only if the logged-in user is the creator -->
+                {% if ticket.user == request.user %}
+                <form method="post" action="{% url 'hide_ticket' ticket.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="custom_button">Hide</button>
+                </form>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p>Aucun ticket n'a été publié pour le moment.</p>
+            {% endfor %}
+        </div>
+
     </main>
 </body>
 </html>

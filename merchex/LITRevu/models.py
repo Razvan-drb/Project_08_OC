@@ -6,11 +6,14 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 class Ticket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, blank=True)
     book_title = models.CharField(max_length=255, blank=True)
     author = models.CharField(max_length=255, blank=True)
     review_content = models.TextField(blank=True)
     review_time = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to="", blank=True, null=True)   # save to MEDIA_ROOT
+    hidden = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.book_title} - {self.author}"
@@ -44,6 +47,7 @@ class Critique(models.Model):
     image = models.ImageField(upload_to="")  # save to MEDIA_ROOT
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # user who created it
     created_at = models.DateTimeField(auto_now_add=True)
+    hidden = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title} - {self.user.username}"

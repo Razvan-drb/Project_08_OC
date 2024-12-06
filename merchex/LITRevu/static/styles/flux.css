@@ -108,3 +108,11 @@ main {
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+.book-cover img {
+    width: 150px; /* Set a consistent width */
+    height: 200px; /* Set a consistent height */
+    object-fit: cover; /* Ensures the image scales without distortion */
+    border: 1px solid #ddd; /* Optional border for aesthetics */
+    border-radius: 4px; /* Optional rounded corners */
+    margin: 10px 0; /* Add some spacing */
+}
