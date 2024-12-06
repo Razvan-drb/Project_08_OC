@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
-from .models import Inscription, Ticket, Critique
+from .models import Inscription, Ticket, Critique, TicketFeedback
 
 
 ####  INSCRIPTION FORM ####
@@ -65,3 +65,18 @@ class LoginForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=150)
     password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
 
+############ TICKET FEEDBACK #############
+class TicketFeedbackForm(forms.ModelForm):
+    class Meta:
+        model = TicketFeedback
+        fields = ['rating', 'comment']
+
+    rating = forms.ChoiceField(
+        choices=[(i, str(i)) for i in range(6)],
+        widget=forms.RadioSelect,
+        label="Note"
+    )
+    comment = forms.CharField(
+        widget=forms.Textarea(attrs={"rows": 6, "placeholder": "Votre commentaire"}),
+        label="Commentaire"
+    )

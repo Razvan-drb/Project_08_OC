@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback for {{ ticket.book_title }}</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/ticket_feedback.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Donner un commentaire pour "{{ ticket.book_title }}"</h2>
+
+        <!-- Ticket Details -->
+        <div class="ticket-details">
+            <h3>{{ ticket.book_title }}</h3>
+            <p><strong>Auteur:</strong> {{ ticket.author }}</p>
+            <p>{{ ticket.review_content }}</p>
+
+            {% if ticket.image %}
+            <div class="ticket-image">
+                <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
+            </div>
+            {% else %}
+            <div class="ticket-image">
+                <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Feedback Form -->
+        <h3>Laisser un commentaire</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="ticket" value="{{ ticket.id }}">
+
+            <div class="form-group">
+                <label for="rating">Note</label>
+                {{ feedback_form.rating }}
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Commentaire</label>
+                {{ feedback_form.comment }}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Soumettre le commentaire</button>
+        </form>
+
+        <br>
+        <a href="{% url 'flux' %}" class="btn btn-secondary">Retour au flux</a>
+    </div>
+</body>
+</html>

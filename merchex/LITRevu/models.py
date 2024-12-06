@@ -62,3 +62,13 @@ class CritiqueFeedback(models.Model):
     def __str__(self):
         return f"Feedback on {self.critique.title} - Rating: {self.rating}/5"
 
+
+class TicketFeedback(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="feedbacks")
+    rating = models.PositiveSmallIntegerField(choices=[(i, str(i)) for i in range(6)])
+    comment = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # user who gave feedback
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback for {self.ticket.book_title} - Rating: {self.rating}/5"

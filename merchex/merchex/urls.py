@@ -19,6 +19,9 @@ urlpatterns = [
     path('follow/<int:user_id>/', views.follow_user, name='follow_user'),
     path('unfollow/<int:user_id>/', views.unfollow_user, name='unfollow_user'),
     path('create-critique/', views.create_critique, name='create_critique'),
+
+    path('ticket/<int:ticket_id>/feedback/', views.ticket_feedback, name='ticket_feedback'),
+
     path('hide-critique/<int:critique_id>/', views.hide_critique, name='hide_critique'),
     path('hide_ticket/<int:ticket_id>/', views.hide_ticket, name='hide_ticket'),
 

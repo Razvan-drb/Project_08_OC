@@ -8,7 +8,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from LITRevu.models import Ticket, Follow, CritiqueFeedback, Critique
-from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm
+from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm, \
+    TicketFeedbackForm
 from .models import Inscription
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -235,3 +236,33 @@ def home_view(request):
         form = LoginForm()
 
     return render(request, 'LITRevu/home.html', {'form': form})
+
+
+################## TICKET FEDDBACK ###########
+
+@login_required(login_url='/home/')
+def ticket_feedback(request, ticket_id):
+    ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if request.method == 'POST':
+        feedback_form = TicketFeedbackForm(request.POST)
+
+        if feedback_form.is_valid():
+            feedback = feedback_form.save(commit=False)
+            feedback.user = request.user
+            feedback.ticket = ticket  # Link feedback to the ticket
+            feedback.save()
+
+            messages.success(request, "Commentaire et note ajoutés avec succès!")
+            return redirect('flux')  # Redirect to the flux page after submission
+        else:
+            messages.error(request, "Veuillez vérifier les erreurs du formulaire.")
+
+    else:
+        feedback_form = TicketFeedbackForm()
+
+    return render(
+        request,
+        'LITRevu/ticket_feedback.html',
+        {'ticket': ticket, 'feedback_form': feedback_form}
+    )

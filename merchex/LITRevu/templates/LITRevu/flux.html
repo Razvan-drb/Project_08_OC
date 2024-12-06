@@ -69,38 +69,43 @@
         <p>Aucune critique n'a été publiée pour le moment.</p>
         {% endfor %}
 
-        <!-- Display Tickets -->
-        <div class="ticket-section">
-            <h2>Tickets</h2>
-            {% for ticket in tickets %}
-            <div class="ticket-box">
-                <h3>{{ ticket.book_title }}</h3>
-                <p><strong>Auteur:</strong> {{ ticket.author }}</p>
-                <p>{{ ticket.review_content }}</p>
-                <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
+                        <!-- Display Tickets -->
+            <div class="ticket-section">
 
-                {% if ticket.image %}
-                <div class="ticket-image">
-                    <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
-                </div>
-                {% else %}
-                <div class="ticket-image">
-                    <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
-                </div>
-                {% endif %}
+                {% for ticket in tickets %}
+                <div class="ticket-box">
+                    <h3>{{ ticket.book_title }}</h3>
+                    <p><strong>Auteur:</strong> {{ ticket.author }}</p>
+                    <p>{{ ticket.review_content }}</p>
+                    <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
 
-                <!-- Show the hide button only if the logged-in user is the creator -->
-                {% if ticket.user == request.user %}
-                <form method="post" action="{% url 'hide_ticket' ticket.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="custom_button">Hide</button>
-                </form>
-                {% endif %}
+                    {% if ticket.image %}
+                    <div class="ticket-image">
+                        <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
+                    </div>
+                    {% else %}
+                    <div class="ticket-image">
+                        <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
+                    </div>
+                    {% endif %}
+
+                    <div class="button-container">
+                        <!-- Show the feedback button -->
+                        <a href="{% url 'ticket_feedback' ticket.id %}" class="btn btn-primary">Donner un avis</a>
+
+                        <!-- Show the hide button only if the logged-in user is the creator -->
+                        {% if ticket.user == request.user %}
+                        <form method="post" action="{% url 'hide_ticket' ticket.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="custom_button">Hide</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>Aucun ticket n'a été publié pour le moment.</p>
+                {% endfor %}
             </div>
-            {% empty %}
-            <p>Aucun ticket n'a été publié pour le moment.</p>
-            {% endfor %}
-        </div>
 
     </main>
 </body>
