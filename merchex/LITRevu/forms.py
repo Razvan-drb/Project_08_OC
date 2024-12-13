@@ -80,3 +80,8 @@ class TicketFeedbackForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 6, "placeholder": "Votre commentaire"}),
         label="Commentaire"
     )
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model =TicketFeedback
+        fields = ['rating', 'comment']

@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 
 
+
 class Ticket(models.Model):
     # Your Ticket model definition goes here
     pass
@@ -27,3 +28,5 @@ class UserFollows(models.Model):
         # ensures we don't get multiple UserFollows instances
         # for unique user-user_followed pairs
         unique_together = ('user', 'followed_user', )
+
+

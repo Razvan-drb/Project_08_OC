@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Avis</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/flux.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">Flux</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">LITReview</a></li>
+                <li><a href="{% url 'flux' %}">Flux</a></li>
+                <li><a href="{% url 'create_ticket' %}">Posts</a></li>
+                <li><a href="{% url 'manage_followers' %}">Abonnements</a></li>
+                <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Modifier l'Avis pour "{{ feedback.ticket.book_title }}"</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Mettre à jour</button>
+        </form>
+    </main>
+
+</body>
+</html>

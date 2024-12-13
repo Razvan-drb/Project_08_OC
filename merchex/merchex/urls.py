@@ -25,6 +25,9 @@ urlpatterns = [
     path('hide-critique/<int:critique_id>/', views.hide_critique, name='hide_critique'),
     path('hide_ticket/<int:ticket_id>/', views.hide_ticket, name='hide_ticket'),
 
+    path('my-posts/', views.my_posts, name='my_posts'),
+    path('update_feedback/<int:feedback_id>/', views.update_feedback, name='update_feedback'),
+
     # see static for urls Django
 ]
 

@@ -55,9 +55,10 @@ main {
 
 .button_container {
     display: flex;
-    justify-content: left;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
 }
 
 .custom_button,
@@ -72,8 +73,8 @@ main {
     transition: background-color 0.3s ease;
     display: inline-block;
     text-align: center;
-    text-decoration: none; /* Remove underline for anchor tags */
-    width: auto; /* Let the buttons size based on content */
+    text-decoration: none;
+    width: auto;
 }
 
 .custom_button:hover,
@@ -86,7 +87,7 @@ main {
 }
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+    background-color: #0056b3;
 }
 
 /* Review Box Styling */

@@ -7,9 +7,9 @@ from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirec
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
-from LITRevu.models import Ticket, Follow, CritiqueFeedback, Critique
+from LITRevu.models import Ticket, Follow, CritiqueFeedback, Critique, TicketFeedback
 from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm, \
-    TicketFeedbackForm
+    TicketFeedbackForm, FeedbackForm
 from .models import Inscription
 from django.utils.http import url_has_allowed_host_and_scheme
 
@@ -33,14 +33,14 @@ def inscription(request):
 
 
 def flux(request):
-    tickets = Ticket.objects.filter(hidden=False)
+    tickets = Ticket.objects.filter(hidden=False).prefetch_related('feedbacks')
     critiques = Critique.objects.filter(hidden=False).order_by('-created_at')
-    feedbacks = CritiqueFeedback.objects.all().order_by('-critique__created_at')
+    critique_feedbacks = CritiqueFeedback.objects.all().order_by('-critique__created_at')
 
     return render(
         request,
         'LITRevu/flux.html',
-        {'tickets': tickets,'critiques': critiques, 'feedbacks': feedbacks}
+        {'tickets': tickets,'critiques': critiques, 'critique_feedbacks': critique_feedbacks}
     )
 
 
@@ -266,3 +266,50 @@ def ticket_feedback(request, ticket_id):
         'LITRevu/ticket_feedback.html',
         {'ticket': ticket, 'feedback_form': feedback_form}
     )
+
+############ MY POSTS  #########################
+
+
+@login_required(login_url='/home/')
+def my_posts(request):
+
+    tickets = Ticket.objects.filter(user=request.user).order_by('-review_time')
+
+    feedbacks = CritiqueFeedback.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(
+        request,
+        'LITRevu/my_posts.html',
+        {'tickets': tickets, 'feedbacks': feedbacks}
+    )
+
+
+
+def update_feedback(request, feedback_id):
+
+    try:
+        feedback = TicketFeedback.objects.get(id=feedback_id)
+    except TicketFeedback.DoesNotExist:
+        return redirect('flux')
+
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST, instance=feedback)
+        if form.is_valid():
+            form.save()
+            return redirect('flux')
+    else:
+        form = FeedbackForm(instance=feedback)
+
+    return render(request, 'LITRevu/update_feedback.html', {'form': form, 'feedback': feedback})
+
+
+
+
+
+
+
+
+
+
+
+

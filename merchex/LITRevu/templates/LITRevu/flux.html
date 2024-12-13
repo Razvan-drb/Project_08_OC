@@ -15,6 +15,7 @@
                 <li><a href="{% url 'home' %}">LITReview</a></li>
                 <li><a href="{% url 'flux' %}">Flux</a></li>
                 <li><a href="{% url 'create_ticket' %}">Posts</a></li>
+                <li><a href="{% url 'my_posts' %}">Mes Publications</a></li>
                 <li><a href="{% url 'manage_followers' %}">Abonnements</a></li>
                 <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
             </ul>
@@ -71,41 +72,59 @@
 
                         <!-- Display Tickets -->
             <div class="ticket-section">
+    {% for ticket in tickets %}
+    <div class="ticket-box">
+        <h3>{{ ticket.book_title }}</h3>
+        <p><strong>Auteur:</strong> {{ ticket.author }}</p>
+        <p>{{ ticket.review_content }}</p>
+        <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
 
-                {% for ticket in tickets %}
-                <div class="ticket-box">
-                    <h3>{{ ticket.book_title }}</h3>
-                    <p><strong>Auteur:</strong> {{ ticket.author }}</p>
-                    <p>{{ ticket.review_content }}</p>
-                    <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
+        {% if ticket.image %}
+        <div class="ticket-image">
+            <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
+        </div>
+        {% else %}
+        <div class="ticket-image">
+            <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
+        </div>
+        {% endif %}
 
-                    {% if ticket.image %}
-                    <div class="ticket-image">
-                        <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
-                    </div>
-                    {% else %}
-                    <div class="ticket-image">
-                        <img src="{% static 'data/placeholder.png' %}" alt="Placeholder image">
-                    </div>
-                    {% endif %}
+        <!-- Ticket Feedbacks -->
+        <div class="feedback-section">
+            <h3>Feedbacks:</h3>
+            {% if ticket.feedbacks.exists %}
+                <ul>
+                    {% for feedback in ticket.feedbacks.all %}
+                    <li>
+                        <strong>{{ feedback.user.username }}</strong> ({{ feedback.rating }}/5):
+                        {{ feedback.comment }}
+                        <span class="timestamp">{{ feedback.created_at|date:"d M Y, H:i" }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun feedback pour ce ticket.</p>
+            {% endif %}
+        </div>
 
-                    <div class="button-container">
-                        <!-- Show the feedback button -->
-                        <a href="{% url 'ticket_feedback' ticket.id %}" class="btn btn-primary">Donner un avis</a>
+        <div class="button-container">
+            <!-- Show the feedback button -->
+            <a href="{% url 'ticket_feedback' ticket.id %}" class="btn btn-primary">Donner un avis</a>
 
-                        <!-- Show the hide button only if the logged-in user is the creator -->
-                        {% if ticket.user == request.user %}
-                        <form method="post" action="{% url 'hide_ticket' ticket.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="custom_button">Hide</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-                {% empty %}
-                <p>Aucun ticket n'a été publié pour le moment.</p>
-                {% endfor %}
-            </div>
+            <!-- Show the hide button only if the logged-in user is the creator -->
+            {% if ticket.user == request.user %}
+            <form method="post" action="{% url 'hide_ticket' ticket.id %}">
+                {% csrf_token %}
+                <button type="submit" class="custom_button">Hide</button>
+            </form>
+            {% endif %}
+        </div>
+        </div>
+            {% empty %}
+            <p>Aucun ticket n'a été publié pour le moment.</p>
+            {% endfor %}
+        </div>
+
 
     </main>
 </body>

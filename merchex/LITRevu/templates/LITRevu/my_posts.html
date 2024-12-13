@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flux</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/flux.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">Flux</div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">LITReview</a></li>
+                <li><a href="{% url 'flux' %}">Flux</a></li>
+                <li><a href="{% url 'create_ticket' %}">Posts</a></li>
+                <li><a href="{% url 'manage_followers' %}">Abonnements</a></li>
+                <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Mes Publications</h1>
+
+        <!-- Section for User's Tickets and Feedbacks -->
+        <section>
+            <h2>Mes Tickets</h2>
+            {% if tickets.exists %}
+            <div class="ticket-section">
+                {% for ticket in tickets %}
+                <div class="ticket-box">
+                    <h3>{{ ticket.book_title }}</h3>
+                    <p><strong>Auteur:</strong> {{ ticket.author }}</p>
+                    <p>{{ ticket.review_content }}</p>
+                    <p class="review-time">{{ ticket.review_time|date:"H:i, d M Y" }}</p>
+
+                    {% if ticket.image %}
+                    <div class="ticket-image">
+                        <img src="{{ ticket.image.url }}" alt="Image for {{ ticket.book_title }}">
+                    </div>
+                    {% else %}
+                    <div class="ticket-image">
+                        <img src="{% static 'data/neil_gaiman_Norse_Mythology.png' %}" alt="Placeholder image">
+                    </div>
+                    {% endif %}
+
+                    <!-- Display feedbacks associated with this ticket -->
+                    {% if ticket.feedbacks.exists %}
+                    <div class="feedbacks">
+                        {% for feedback in ticket.feedbacks.all %}
+                        <div class="feedback-box">
+                            <p><strong>Note:</strong> {{ feedback.rating }}/5</p>
+                            <p><strong>Commentaire:</strong> {{ feedback.comment }}</p>
+                            <p class="review-time">Posté le {{ feedback.created_at|date:"H:i, d M Y" }}</p>
+
+                            <!-- Button to update the feedback -->
+                            <a href="{% url 'update_feedback' feedback.id %}" class="update-btn">Modifier</a>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>Aucun avis pour ce ticket.</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>Vous n'avez publié aucun ticket pour le moment.</p>
+            {% endif %}
+        </section>
+    </main>
+
+</body>
+</html>
