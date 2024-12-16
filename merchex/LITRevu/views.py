@@ -303,13 +303,3 @@ def update_feedback(request, feedback_id):
     return render(request, 'LITRevu/update_feedback.html', {'form': form, 'feedback': feedback})
 
 
-
-
-
-
-
-
-
-
-
-
