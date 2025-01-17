@@ -23,7 +23,7 @@
     </header>
 
     <main>
-        <div class="buttons">
+        <div class="button_container">
             <form method="get" action="{% url 'create_ticket' %}">
                 <button type="submit" class="custom_button">Demander une critique</button>
             </form>
@@ -107,7 +107,7 @@
             {% endif %}
         </div>
 
-        <div class="button-container">
+        <div class="button_container">
             <!-- Show the feedback button -->
             <a href="{% url 'ticket_feedback' ticket.id %}" class="btn btn-primary">Donner un avis</a>
 
