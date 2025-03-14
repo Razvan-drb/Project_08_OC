@@ -3,16 +3,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from LITRevu.models import Ticket, Follow, CritiqueFeedback, Critique, TicketFeedback
 from .forms import InscriptionForm, TicketForm, FollowUserForm, LoginForm, CritiqueForm, CritiqueFeedbackForm, \
     TicketFeedbackForm, FeedbackForm
-from .models import Inscription
-from django.utils.http import url_has_allowed_host_and_scheme
-
 
 
 def home(request):
@@ -40,9 +37,8 @@ def flux(request):
     return render(
         request,
         'LITRevu/flux.html',
-        {'tickets': tickets,'critiques': critiques, 'critique_feedbacks': critique_feedbacks}
+        {'tickets': tickets, 'critiques': critiques, 'critique_feedbacks': critique_feedbacks}
     )
-
 
 
 # View to create a ticket
@@ -74,7 +70,7 @@ def hide_ticket(request, ticket_id):
     return redirect('flux')
 
 
-############## CRITIQUE VIEW ################
+# CRITIQUE VIEW
 @login_required(login_url='/home/')
 def create_critique(request):
     if request.method == 'POST':
@@ -131,7 +127,7 @@ def hide_critique(request, critique_id):
         return HttpResponseRedirect(reverse('flux'))
 
 
-############### LOGIN ###########################""
+# LOGIN
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -154,12 +150,12 @@ def login_view(request):
     return render(request, 'LITRevu/home.html', {'form': form})
 
 
-
 def custom_logout_view(request):
     logout(request)
     return redirect('home')
 
-#################### FOLLOWERS #######################""""
+
+# FOLLOWERS
 @login_required(login_url='/home/')
 def manage_followers(request):
     if request.method == 'POST':
@@ -217,6 +213,7 @@ def unfollow_user(request, user_id):
 
     return redirect('manage_followers')
 
+
 def home_view(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -238,7 +235,7 @@ def home_view(request):
     return render(request, 'LITRevu/home.html', {'form': form})
 
 
-################## TICKET FEDDBACK ###########
+# TICKET FEDDBACK
 
 @login_required(login_url='/home/')
 def ticket_feedback(request, ticket_id):
@@ -267,9 +264,8 @@ def ticket_feedback(request, ticket_id):
         {'ticket': ticket, 'feedback_form': feedback_form}
     )
 
-############ MY POSTS  #########################
 
-
+# MY POSTS
 @login_required(login_url='/home/')
 def my_posts(request):
 
@@ -282,7 +278,6 @@ def my_posts(request):
         'LITRevu/my_posts.html',
         {'tickets': tickets, 'feedbacks': feedbacks}
     )
-
 
 
 def update_feedback(request, feedback_id):
@@ -301,5 +296,3 @@ def update_feedback(request, feedback_id):
         form = FeedbackForm(instance=feedback)
 
     return render(request, 'LITRevu/update_feedback.html', {'form': form, 'feedback': feedback})
-
-

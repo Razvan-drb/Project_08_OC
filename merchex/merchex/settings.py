@@ -132,5 +132,3 @@ AUTHENTICATION_BACKENDS = [
 # Path for uploaded images
 MEDIA_ROOT = '/home/razvandaraban/Projets/Project_08_OC/merchex/LITRevu/static/data/uploaded_books_img'
 MEDIA_URL = '/media/'
-
-

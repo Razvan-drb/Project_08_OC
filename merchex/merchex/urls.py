@@ -35,4 +35,3 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # condition ou la valeur debug dans setting is True
-

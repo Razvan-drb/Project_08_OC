@@ -1,15 +1,15 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
 from .models import Inscription, Ticket, Critique, TicketFeedback
 
 
-####  INSCRIPTION FORM ####
+#  INSCRIPTION FORM
 
 class InscriptionForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
-    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirmer mot de passe")
+    confirm_password = forms.CharField(widget=forms.PasswordInput,
+                                       label="Confirmer mot de pass")
 
     class Meta:
         model = Inscription
@@ -30,7 +30,9 @@ class TicketForm(forms.ModelForm):
         model = Ticket
         fields = ['name', 'book_title', 'author', 'review_content', 'image']
 
-#### CRITIQUE PART ####
+
+# CRITIQUE PART
+
 
 class CritiqueForm(forms.ModelForm):
     class Meta:
@@ -49,7 +51,9 @@ class CritiqueFeedbackForm(forms.Form):
         label="Commentaire"
     )
 
-### FOLLOW USERS AND LOGIN ####
+
+# FOLLOW USERS AND LOGIN
+
 
 class FollowUserForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=150)
@@ -65,7 +69,8 @@ class LoginForm(forms.Form):
     username = forms.CharField(label="Nom d'utilisateur", max_length=150)
     password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
 
-############ TICKET FEEDBACK #############
+
+# TICKET FEEDBACK
 class TicketFeedbackForm(forms.ModelForm):
     class Meta:
         model = TicketFeedback
@@ -81,7 +86,8 @@ class TicketFeedbackForm(forms.ModelForm):
         label="Commentaire"
     )
 
+
 class FeedbackForm(forms.ModelForm):
     class Meta:
-        model =TicketFeedback
+        model = TicketFeedback
         fields = ['rating', 'comment']
