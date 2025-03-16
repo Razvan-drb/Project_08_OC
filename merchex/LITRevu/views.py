@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -30,7 +31,7 @@ def inscription(request):
 
 
 def flux(request):
-    tickets = Ticket.objects.filter(hidden=False).prefetch_related('feedbacks')
+    tickets = Ticket.objects.filter(hidden=False) #.prefetch_related('feedbacks') # fais une joiture au debut pour recuperer tout a l a fois
     critiques = Critique.objects.filter(hidden=False).order_by('-created_at')
     critique_feedbacks = CritiqueFeedback.objects.all().order_by('-critique__created_at')
 
@@ -47,9 +48,9 @@ def create_ticket(request):
     if request.method == 'POST':
         form = TicketForm(request.POST, request.FILES)  # for file uploads
         if form.is_valid():
-            # Set the user field to the logged-in user before saving
+
             ticket = form.save(commit=False)
-            ticket.user = request.user  # Assign the logged-in user to the ticket
+            ticket.user = request.user  # Set the logged-in user to the ticket
             ticket.save()
             messages.success(request, "Ticket créé avec succès!")
             return redirect('flux')
@@ -62,9 +63,9 @@ def create_ticket(request):
 # View to hide a ticket
 @login_required
 def hide_ticket(request, ticket_id):
-    # Get the ticket object, only allowing the owner to hide their ticket
+
     ticket = get_object_or_404(Ticket, id=ticket_id, user=request.user)
-    ticket.hidden = True  # Set the ticket to be hidden
+    ticket.hidden = True
     ticket.save()
     messages.success(request, "Ticket caché avec succès!")
     return redirect('flux')
@@ -279,13 +280,15 @@ def my_posts(request):
         {'tickets': tickets, 'feedbacks': feedbacks}
     )
 
-
+@login_required(login_url='/home/')
 def update_feedback(request, feedback_id):
+    feedback = get_object_or_404(TicketFeedback, id=feedback_id) # on recupere l'obejt ou return a 404 error si l'objet n'est pas trouvé
 
-    try:
-        feedback = TicketFeedback.objects.get(id=feedback_id)
-    except TicketFeedback.DoesNotExist:
-        return redirect('flux')
+    # # restrict access version avec if statement
+    # if feedback.user != request.user:
+    #     return redirect('flux')
+
+    assert feedback.user == request.user, PermissionDenied
 
     if request.method == 'POST':
         form = FeedbackForm(request.POST, instance=feedback)
