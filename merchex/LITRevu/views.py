@@ -242,6 +242,8 @@ def home_view(request):
 def ticket_feedback(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
+    assert ticket.user == request.user, PermissionDenied # restrict access
+
     if request.method == 'POST':
         feedback_form = TicketFeedbackForm(request.POST)
 
